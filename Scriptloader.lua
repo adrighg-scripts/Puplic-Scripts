@@ -10,7 +10,7 @@ local Player = Players.LocalPlayer
 local SCRIPTS = {
     {
         name = "Knockout Script",
-        loadstring = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Puplic-Scripts/main/Knockout.lua"))()',
+        loadstring = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Public-Scripts/main/Knockout.lua"))()',
         description = "Knockout Auto Win Script"
     },
 }
