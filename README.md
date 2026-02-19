@@ -6,7 +6,7 @@
 
 
 ```bash
-loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Puplic-Scripts/refs/heads/main/Knockout.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Puplic-Scripts/refs/heads/main/Scriptloader.lua"))()
 ```
 
 ## Knockout
