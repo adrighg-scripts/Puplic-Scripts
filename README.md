@@ -2,7 +2,7 @@
   <h1>🔴 Script Loader</h1> 
 
 ```bash
-loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Puplic-Scripts/refs/heads/main/Scriptloader.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Public-Scripts/refs/heads/main/Scriptloader.lua"))()
 ```
 
   <h1>Copy Loadstrings:</h1>
@@ -12,5 +12,5 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Pupli
 
 
 ```bash
-loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Puplic-Scripts/refs/heads/main/Knockout.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Public-Scripts/refs/heads/main/Knockout.lua"))()
 ```
