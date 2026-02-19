@@ -10,7 +10,6 @@ local Player = Players.LocalPlayer
 local SCRIPTS = {
     {
         name = "Knockout Script",
-        -- Das ist GENAU der String, der auch kopiert wird:
         loadstring = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Puplic-Scripts/main/Knockout.lua"))()',
         description = "Knockout Auto Win Script"
     },
@@ -162,6 +161,24 @@ listFrame.ScrollBarThickness = 4
 listFrame.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 100)
 listFrame.Parent = contentFrame
 
+-- Loading Frame (für Animation)
+local loadingFrame = Instance.new("Frame")
+loadingFrame.Name = "LoadingFrame"
+loadingFrame.Size = UDim2.new(1, 0, 1, 0)
+loadingFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+loadingFrame.BackgroundTransparency = 0.5
+loadingFrame.Visible = false
+loadingFrame.Parent = contentFrame
+
+local loadingSpinner = Instance.new("ImageLabel")
+loadingSpinner.Name = "Spinner"
+loadingSpinner.Size = UDim2.new(0, 30, 0, 30)
+loadingSpinner.Position = UDim2.new(0.5, -15, 0.5, -15)
+loadingSpinner.BackgroundTransparency = 1
+loadingSpinner.Image = "rbxassetid://6034502866"
+loadingSpinner.ImageColor3 = Color3.fromRGB(100, 150, 255)
+loadingSpinner.Parent = loadingFrame
+
 -- Notification Frame
 local notificationFrame = Instance.new("Frame")
 notificationFrame.Name = "NotificationFrame"
@@ -187,6 +204,64 @@ notifText.TextSize = 13
 notifText.Font = Enum.Font.Gotham
 notifText.TextWrapped = true
 notifText.Parent = notificationFrame
+
+-- ============================================
+-- INTRO ANIMATION (WIEDER HERGESTELLT)
+-- ============================================
+local introFrame = Instance.new("Frame")
+introFrame.Name = "IntroFrame"
+introFrame.Size = UDim2.new(1, 0, 1, 0)
+introFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+introFrame.BackgroundTransparency = 1
+introFrame.Parent = mainFrame
+introFrame.ZIndex = 10
+
+local introTitle = Instance.new("TextLabel")
+introTitle.Size = UDim2.new(1, 0, 0, 80)
+introTitle.Position = UDim2.new(0, 0, 0.5, -40)
+introTitle.BackgroundTransparency = 1
+introTitle.Text = "SCRIPT LOADER"
+introTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+introTitle.TextStrokeTransparency = 0.5
+introTitle.TextStrokeColor3 = Color3.fromRGB(100, 150, 255)
+introTitle.Font = Enum.Font.GothamBold
+introTitle.TextSize = 36
+introTitle.TextTransparency = 1
+introTitle.Parent = introFrame
+
+local introSubtitle = Instance.new("TextLabel")
+introSubtitle.Size = UDim2.new(1, 0, 0, 30)
+introSubtitle.Position = UDim2.new(0, 0, 0.5, 30)
+introSubtitle.BackgroundTransparency = 1
+introSubtitle.Text = "by adrighg-scripts"
+introSubtitle.TextColor3 = Color3.fromRGB(180, 180, 200)
+introSubtitle.TextSize = 16
+introSubtitle.TextTransparency = 1
+introSubtitle.Parent = introFrame
+
+local versionText = Instance.new("TextLabel")
+versionText.Size = UDim2.new(1, 0, 0, 20)
+versionText.Position = UDim2.new(0, 0, 1, -25)
+versionText.BackgroundTransparency = 1
+versionText.Text = "v2.0.0 • loading scripts..."
+versionText.TextColor3 = Color3.fromRGB(100, 100, 120)
+versionText.Font = Enum.Font.Gotham
+versionText.TextSize = 11
+versionText.TextTransparency = 1
+versionText.Parent = introFrame
+
+local progressBg = Instance.new("Frame")
+progressBg.Size = UDim2.new(0.6, 0, 0, 2)
+progressBg.Position = UDim2.new(0.2, 0, 0.7, 0)
+progressBg.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+progressBg.BackgroundTransparency = 1
+progressBg.Parent = introFrame
+
+local progressBar = Instance.new("Frame")
+progressBar.Size = UDim2.new(0, 0, 1, 0)
+progressBar.BackgroundColor3 = Color3.fromRGB(100, 150, 255)
+progressBar.BackgroundTransparency = 1
+progressBar.Parent = progressBg
 
 -- ============================================
 -- FUNKTIONEN
@@ -215,14 +290,11 @@ local function copyToClipboard(text)
     end
 end
 
--- NEU: Führt direkt den Loadstring aus
 local function executeLoadstring(loadstringCode, name)
     print("▶️ Executing: " .. name)
     showNotification("▶️ Running " .. name .. "...", false)
     
-    -- Direkt den Loadstring ausführen (genau wie COPY)
     local success, result = pcall(function()
-        -- Hier wird der Loadstring ausgeführt
         return loadstring(loadstringCode)()
     end)
     
@@ -300,7 +372,6 @@ local function displayScripts()
         btnFrame.BackgroundTransparency = 1
         btnFrame.Parent = fileFrame
         
-        -- RUN Button
         local execBtn = Instance.new("TextButton")
         execBtn.Size = UDim2.new(0, 50, 0, 28)
         execBtn.Position = UDim2.new(0, 0, 0.5, -14)
@@ -315,7 +386,6 @@ local function displayScripts()
         btnCorner.CornerRadius = UDim.new(0, 4)
         btnCorner.Parent = execBtn
         
-        -- COPY Button
         local copyBtn = Instance.new("TextButton")
         copyBtn.Size = UDim2.new(0, 50, 0, 28)
         copyBtn.Position = UDim2.new(1, -50, 0.5, -14)
@@ -330,7 +400,6 @@ local function displayScripts()
         copyCorner.CornerRadius = UDim.new(0, 4)
         copyCorner.Parent = copyBtn
         
-        -- Hover effects
         execBtn.MouseEnter:Connect(function()
             execBtn.BackgroundColor3 = Color3.fromRGB(80, 150, 80)
         end)
@@ -345,12 +414,10 @@ local function displayScripts()
             copyBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 100)
         end)
         
-        -- RUN: Führt den Loadstring AUS
         execBtn.MouseButton1Click:Connect(function()
             executeLoadstring(script.loadstring, script.name)
         end)
         
-        -- COPY: Kopiert den Loadstring
         copyBtn.MouseButton1Click:Connect(function()
             copyToClipboard(script.loadstring)
             copyBtn.Text = "✓"
@@ -362,6 +429,49 @@ local function displayScripts()
     end
     
     listFrame.CanvasSize = UDim2.new(0, 0, 0, yPos + 5)
+end
+
+-- ============================================
+-- INTRO ANIMATION STARTEN
+-- ============================================
+local function playIntro()
+    screenGui.Enabled = true
+    
+    local tweenInfo = TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    TweenService:Create(introTitle, tweenInfo, {TextTransparency = 0}):Play()
+    task.wait(0.2)
+    
+    TweenService:Create(introSubtitle, tweenInfo, {TextTransparency = 0}):Play()
+    task.wait(0.2)
+    
+    TweenService:Create(versionText, tweenInfo, {TextTransparency = 0}):Play()
+    TweenService:Create(progressBg, tweenInfo, {BackgroundTransparency = 0.7}):Play()
+    
+    local progress = 0
+    while progress < 1 do
+        progress = progress + 0.02
+        progressBar.Size = UDim2.new(progress, 0, 1, 0)
+        progressBar.BackgroundTransparency = 0
+        task.wait(0.03)
+    end
+    
+    task.wait(0.3)
+    
+    local fadeOutInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+    
+    TweenService:Create(introTitle, fadeOutInfo, {TextTransparency = 1}):Play()
+    TweenService:Create(introSubtitle, fadeOutInfo, {TextTransparency = 1}):Play()
+    TweenService:Create(versionText, fadeOutInfo, {TextTransparency = 1}):Play()
+    TweenService:Create(progressBar, fadeOutInfo, {BackgroundTransparency = 1}):Play()
+    TweenService:Create(progressBg, fadeOutInfo, {BackgroundTransparency = 1}):Play()
+    TweenService:Create(introFrame, fadeOutInfo, {BackgroundTransparency = 1}):Play()
+    
+    task.wait(0.5)
+    introFrame:Destroy()
+    
+    -- Scripts anzeigen
+    displayScripts()
 end
 
 -- ============================================
@@ -449,10 +559,9 @@ searchBox.Changed:Connect(function(prop)
 end)
 
 -- ============================================
--- START
+-- START MIT INTRO
 -- ============================================
-screenGui.Enabled = true
-displayScripts()
+playIntro()
 
 print("✨ My Scripts Loader started!")
 print("📁 " .. #SCRIPTS .. " scripts loaded")
