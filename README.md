@@ -6,7 +6,7 @@
 
 
 ```bash
-loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Puplic-Scripts/refs/heads/main/Knockout"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Puplic-Scripts/refs/heads/main/Knockout.lua"))()
 ```
 
 ## Slap Duells
@@ -14,5 +14,5 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Pupli
 
 
 ```bash
-loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Puplic-Scripts/refs/heads/main/Slap%20Duells"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Puplic-Scripts/refs/heads/main/Slap%20Duells.lua"))()
 ```
