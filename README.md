@@ -1,7 +1,7 @@
 
   <h1>Copy Loadstrings:</h1>
 
-## Knockout
+  ## Scriptloader
 
 
 
@@ -9,10 +9,10 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Puplic-Scripts/refs/heads/main/Knockout.lua"))()
 ```
 
-## Slap Duells
+## Knockout
 
 
 
 ```bash
-loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Puplic-Scripts/refs/heads/main/Slap%20Duells.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Puplic-Scripts/refs/heads/main/Knockout.lua"))()
 ```
