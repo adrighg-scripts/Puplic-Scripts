@@ -9,9 +9,9 @@ local Player = Players.LocalPlayer
 -- ============================================
 local SCRIPTS = {
     {
-        name = "Knockout Script",
-        loadstring = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Public-Scripts/main/Knockout.lua"))()',
-        description = "Knockout Auto Win Script"
+        name = "Knockout",
+        loadstring = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/Public-Scripts/refs/heads/main/Knockout.lua"))()',
+        description = "Knockout Auto win Script"
     },
 }
 
@@ -37,7 +37,7 @@ mainFrame.Size = guiSize
 mainFrame.Position = UDim2.new(0.5, -190, 0.5, -225)
 mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
 mainFrame.BorderSizePixel = 0
-mainFrame.ClipsDescendants = true
+mainFrame.ClipsDescendants = true -- WICHTIG: Verhindert dass Inhalte über den Rand ragen
 mainFrame.Parent = screenGui
 
 local corner = Instance.new("UICorner")
@@ -74,14 +74,15 @@ buttonsFrame.Position = UDim2.new(1, -60, 0, 0)
 buttonsFrame.BackgroundTransparency = 1
 buttonsFrame.Parent = titleBar
 
+-- Minimize Button (mit korrektem Minus-Zeichen)
 local minimizeButton = Instance.new("TextButton")
 minimizeButton.Name = "MinimizeButton"
 minimizeButton.Size = UDim2.new(0, 24, 0, 24)
 minimizeButton.Position = UDim2.new(0, 0, 0.5, -12)
 minimizeButton.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
-minimizeButton.Text = "−"
+minimizeButton.Text = "−"  -- Korrektes Minus-Zeichen
 minimizeButton.TextColor3 = Color3.fromRGB(220, 220, 255)
-minimizeButton.TextSize = 18
+minimizeButton.TextSize = 20
 minimizeButton.Font = Enum.Font.GothamBold
 minimizeButton.Parent = buttonsFrame
 
@@ -89,14 +90,15 @@ local minCorner = Instance.new("UICorner")
 minCorner.CornerRadius = UDim.new(0, 4)
 minCorner.Parent = minimizeButton
 
+-- Close Button (mit korrektem X)
 local closeButton = Instance.new("TextButton")
 closeButton.Name = "CloseButton"
 closeButton.Size = UDim2.new(0, 24, 0, 24)
 closeButton.Position = UDim2.new(1, -24, 0.5, -12)
 closeButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-closeButton.Text = "✕"
+closeButton.Text = "✕"  -- Korrektes X-Symbol
 closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-closeButton.TextSize = 14
+closeButton.TextSize = 16  -- Größe angepasst
 closeButton.Font = Enum.Font.GothamBold
 closeButton.Parent = buttonsFrame
 
@@ -104,6 +106,7 @@ local closeCorner = Instance.new("UICorner")
 closeCorner.CornerRadius = UDim.new(0, 4)
 closeCorner.Parent = closeButton
 
+-- Content Frame (wird beim Minimieren ausgeblendet)
 local contentFrame = Instance.new("Frame")
 contentFrame.Name = "ContentFrame"
 contentFrame.Size = UDim2.new(1, 0, 1, -35)
@@ -206,7 +209,7 @@ notifText.TextWrapped = true
 notifText.Parent = notificationFrame
 
 -- ============================================
--- INTRO ANIMATION (WIEDER HERGESTELLT)
+-- INTRO ANIMATION
 -- ============================================
 local introFrame = Instance.new("Frame")
 introFrame.Name = "IntroFrame"
@@ -307,7 +310,53 @@ local function executeLoadstring(loadstringCode, name)
     end
 end
 
--- Display scripts
+-- ============================================
+-- FILTER FUNKTION (OHNE LÜCKEN)
+-- ============================================
+local function filterFiles()
+    if not searchBox or not listFrame then 
+        return 
+    end
+    
+    local searchText = searchBox.Text:lower()
+    local yPos = 0
+    local visibleCount = 0
+    
+    -- Zuerst alle Frames unsichtbar machen
+    for _, fileFrame in ipairs(listFrame:GetChildren()) do
+        if fileFrame:IsA("Frame") then
+            fileFrame.Visible = false
+        end
+    end
+    
+    -- Dann nur die passenden Frames anzeigen und neu positionieren
+    for _, fileFrame in ipairs(listFrame:GetChildren()) do
+        if fileFrame:IsA("Frame") then
+            local nameLabel = fileFrame:FindFirstChild("ScriptName")
+            
+            if nameLabel and nameLabel:IsA("TextLabel") then
+                -- Prüfen ob der Name den Suchtext enthält
+                if searchText == "" or nameLabel.Text:lower():find(searchText, 1, true) then
+                    -- Frame an die nächste freie Position setzen
+                    fileFrame.Position = UDim2.new(0, 5, 0, yPos)
+                    fileFrame.Visible = true
+                    yPos = yPos + 64
+                    visibleCount = visibleCount + 1
+                end
+            end
+        end
+    end
+    
+    -- CanvasSize anpassen (nur sichtbare Einträge)
+    listFrame.CanvasSize = UDim2.new(0, 0, 0, yPos + 5)
+    
+    -- Nach oben scrollen
+    listFrame.CanvasPosition = Vector2.new(0, 0)
+end
+
+-- ============================================
+-- DISPLAY SCRIPTS
+-- ============================================
 local function displayScripts()
     for _, child in ipairs(listFrame:GetChildren()) do
         if child:IsA("Frame") then
@@ -341,6 +390,7 @@ local function displayScripts()
         icon.Parent = fileFrame
         
         local nameLabel = Instance.new("TextLabel")
+        nameLabel.Name = "ScriptName"
         nameLabel.Size = UDim2.new(1, -170, 0, 20)
         nameLabel.Position = UDim2.new(0, 48, 0, 6)
         nameLabel.BackgroundTransparency = 1
@@ -354,6 +404,7 @@ local function displayScripts()
         
         if script.description then
             local descLabel = Instance.new("TextLabel")
+            descLabel.Name = "ScriptDescription"
             descLabel.Size = UDim2.new(1, -170, 0, 18)
             descLabel.Position = UDim2.new(0, 48, 0, 26)
             descLabel.BackgroundTransparency = 1
@@ -432,78 +483,31 @@ local function displayScripts()
 end
 
 -- ============================================
--- INTRO ANIMATION STARTEN
--- ============================================
-local function playIntro()
-    screenGui.Enabled = true
-    
-    local tweenInfo = TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    
-    TweenService:Create(introTitle, tweenInfo, {TextTransparency = 0}):Play()
-    task.wait(0.2)
-    
-    TweenService:Create(introSubtitle, tweenInfo, {TextTransparency = 0}):Play()
-    task.wait(0.2)
-    
-    TweenService:Create(versionText, tweenInfo, {TextTransparency = 0}):Play()
-    TweenService:Create(progressBg, tweenInfo, {BackgroundTransparency = 0.7}):Play()
-    
-    local progress = 0
-    while progress < 1 do
-        progress = progress + 0.02
-        progressBar.Size = UDim2.new(progress, 0, 1, 0)
-        progressBar.BackgroundTransparency = 0
-        task.wait(0.03)
-    end
-    
-    task.wait(0.3)
-    
-    local fadeOutInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
-    
-    TweenService:Create(introTitle, fadeOutInfo, {TextTransparency = 1}):Play()
-    TweenService:Create(introSubtitle, fadeOutInfo, {TextTransparency = 1}):Play()
-    TweenService:Create(versionText, fadeOutInfo, {TextTransparency = 1}):Play()
-    TweenService:Create(progressBar, fadeOutInfo, {BackgroundTransparency = 1}):Play()
-    TweenService:Create(progressBg, fadeOutInfo, {BackgroundTransparency = 1}):Play()
-    TweenService:Create(introFrame, fadeOutInfo, {BackgroundTransparency = 1}):Play()
-    
-    task.wait(0.5)
-    introFrame:Destroy()
-    
-    -- Scripts anzeigen
-    displayScripts()
-end
-
--- ============================================
 -- GUI FUNKTIONEN
 -- ============================================
 local function animateOpenClose(targetOpen)
     local tweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     
     if targetOpen then
+        -- Beim Öffnen: ContentFrame wieder anzeigen
         local goal = { Size = guiSize }
         local tween = TweenService:Create(mainFrame, tweenInfo, goal)
         tween:Play()
+        
+        -- ContentFrame einblenden
+        contentFrame.Visible = true
         isOpen = true
+        minimizeButton.Text = "−"
     else
+        -- Beim Schließen: ContentFrame ausblenden
         local goal = { Size = minimizedSize }
         local tween = TweenService:Create(mainFrame, tweenInfo, goal)
         tween:Play()
+        
+        -- ContentFrame ausblenden
+        contentFrame.Visible = false
         isOpen = false
-    end
-end
-
-local function filterFiles()
-    local searchText = searchBox.Text:lower()
-    
-    for _, fileFrame in ipairs(listFrame:GetChildren()) do
-        if fileFrame:IsA("Frame") then
-            local nameLabel = fileFrame:FindFirstChildOfClass("TextLabel")
-            if nameLabel and nameLabel.Text then
-                local visible = searchText == "" or nameLabel.Text:lower():find(searchText, 1, true) ~= nil
-                fileFrame.Visible = visible
-            end
-        end
+        minimizeButton.Text = "+"  -- Plus-Zeichen wenn minimiert
     end
 end
 
@@ -552,14 +556,95 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     end
 end)
 
-searchBox.Changed:Connect(function(prop)
-    if prop == "Text" then
+-- ============================================
+-- SEARCHBOX EVENTS SETUP
+-- ============================================
+local function setupSearchEvents()
+    -- Kleine Verzögerung um sicherzustellen dass alles geladen ist
+    task.wait(0.1)
+    
+    if searchBox then
+        -- Echtzeit-Suche bei jedem Tastendruck
+        searchBox.Changed:Connect(function(prop)
+            if prop == "Text" then
+                filterFiles()
+            end
+        end)
+        
+        -- Bei Enter oder Fokusverlust
+        searchBox.FocusLost:Connect(function()
+            filterFiles()
+        end)
+        
+        -- Initialen Filter anwenden (falls schon Text drin steht)
         filterFiles()
+    else
+        warn("SearchBox konnte nicht gefunden werden! Suche nach...")
+        
+        -- Notfall: Suche nach der SearchBox im gesamten GUI
+        local found = false
+        for _, child in ipairs(contentFrame:GetChildren()) do
+            if child.Name == "SearchFrame" then
+                local box = child:FindFirstChild("SearchBox")
+                if box then
+                    searchBox = box
+                    setupSearchEvents() -- Nochmal versuchen
+                    found = true
+                    break
+                end
+            end
+        end
     end
-end)
+end
 
 -- ============================================
--- START MIT INTRO
+-- INTRO ANIMATION STARTEN
+-- ============================================
+local function playIntro()
+    screenGui.Enabled = true
+    
+    local tweenInfo = TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    TweenService:Create(introTitle, tweenInfo, {TextTransparency = 0}):Play()
+    task.wait(0.2)
+    
+    TweenService:Create(introSubtitle, tweenInfo, {TextTransparency = 0}):Play()
+    task.wait(0.2)
+    
+    TweenService:Create(versionText, tweenInfo, {TextTransparency = 0}):Play()
+    TweenService:Create(progressBg, tweenInfo, {BackgroundTransparency = 0.7}):Play()
+    
+    local progress = 0
+    while progress < 1 do
+        progress = progress + 0.02
+        progressBar.Size = UDim2.new(progress, 0, 1, 0)
+        progressBar.BackgroundTransparency = 0
+        task.wait(0.03)
+    end
+    
+    task.wait(0.3)
+    
+    local fadeOutInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+    
+    TweenService:Create(introTitle, fadeOutInfo, {TextTransparency = 1}):Play()
+    TweenService:Create(introSubtitle, fadeOutInfo, {TextTransparency = 1}):Play()
+    TweenService:Create(versionText, fadeOutInfo, {TextTransparency = 1}):Play()
+    TweenService:Create(progressBar, fadeOutInfo, {BackgroundTransparency = 1}):Play()
+    TweenService:Create(progressBg, fadeOutInfo, {BackgroundTransparency = 1}):Play()
+    TweenService:Create(introFrame, fadeOutInfo, {BackgroundTransparency = 1}):Play()
+    
+    task.wait(0.5)
+    introFrame:Destroy()
+    
+    -- Scripts anzeigen
+    displayScripts()
+    
+    -- Jetzt erst die SearchBox Events verbinden (nachdem alles geladen ist)
+    setupSearchEvents()
+end
+
+-- ============================================
+-- START
 -- ============================================
 playIntro()
 
