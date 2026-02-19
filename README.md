@@ -9,7 +9,7 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/adrighg-scripts/AllScripts/refs/heads/main/APOC%20ULTIMATIV.lua?token=GHSAT0AAAAAADVTNJYXX64W3ZYQ3VRVO5U62MWNA3A"))()
 ```
 
-## 
+## Slap Duells
 
 
 
